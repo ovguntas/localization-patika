@@ -1,23 +1,54 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import { IntlProvider, FormattedRelative, useIntl, FormattedMessage } from 'react-intl';
+
+// const messages = {
+//   title: "Localization Kurma"
+// }
+
+// messages objemizi revize ediyoruz
+
+
+const messages={
+  "tr-TR":{
+    title:"Localization Kurulum",
+    description:"3 Yeni Mesajınız var"
+  },
+  "en-EN":{
+    title:"Assemble Localization",
+    description:"You have 3 new messages"
+  }
+}
+
+
 
 function App() {
+  const [lang, setLang] = useState("tr-TR")
+
+  const changeToTr = () => {
+    setLang("tr-TR")
+  }
+  const changeToEn = () => {
+    setLang("en-EN")
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+
+      <IntlProvider messages={messages[lang]}>
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+        <FormattedMessage id='title' />
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <p>
+        <FormattedMessage id='description' />
+        </p>
+      </IntlProvider>
+
+      <br />
+      <br />
+      {
+        lang === "tr-TR" ? (<button onClick={changeToEn}>EN</button>) : (<button onClick={changeToTr}>TR</button>)
+      }
+
     </div>
   );
 }
