@@ -23,18 +23,19 @@ const messages={
 
 
 function App() {
-  const [lang, setLang] = useState("tr-TR")
+  const defaultLocale=navigator.language
+  const [locale, setLocale] = useState(defaultLocale)
 
   const changeToTr = () => {
-    setLang("tr-TR")
+    setLocale("tr-TR")
   }
   const changeToEn = () => {
-    setLang("en-EN")
+    setLocale("en-EN")
   }
   return (
     <div className="App">
 
-      <IntlProvider messages={messages[lang]}>
+      <IntlProvider locale={locale} messages={messages[locale]}>
         <p>
         <FormattedMessage id='title' />
         </p>
@@ -46,7 +47,7 @@ function App() {
       <br />
       <br />
       {
-        lang === "tr-TR" ? (<button onClick={changeToEn}>EN</button>) : (<button onClick={changeToTr}>TR</button>)
+        locale === "tr-TR" ? (<button onClick={changeToEn}>EN</button>) : (<button onClick={changeToTr}>TR</button>)
       }
 
     </div>
