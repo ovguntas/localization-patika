@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { TextField } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+// import Picker from './components/picker/Picker';
+// import RangePicker from './components/rangePicker/RangePicker';
 // const messages = {
 //   title: "Localization Kurma"
 // }
@@ -15,12 +17,12 @@ const messages = {
   "tr-TR": {
     title: "Localization Kurulum",
     description: "3 Yeni Mesajınız var",
-    formSubmit:"Gönder"
+    formSubmit: "Gönder"
   },
   "en-US": {
     title: "Assemble Localization",
     description: "You have 3 new messages",
-    formSubmit:"Submit"
+    formSubmit: "Submit"
   }
 }
 
@@ -44,14 +46,25 @@ const validationSchema = Yup.object().shape({
 
 
 function App() {
-  const defaultLocale = navigator.language
+
+  const isLocale = localStorage.getItem("locale")
+  const defaultLocale = isLocale ? isLocale : navigator.language
   // console.table(defaultLocale)
   const [locale, setLocale] = useState(defaultLocale)
 
+
+  // dil seçiminde localstorage'a veri kaydetmek için useEffect kullanacaz
+  useEffect(() => {
+    localStorage.setItem("locale", locale)
+  }, [locale])
+
+
   const { values, handleChange, handleBlur, errors, handleSubmit, touched } = useFormik({
     initialValues: initialFormValue,
-    onSubmit: values => {
+    onSubmit: (values, { resetForm }) => {
       alert(JSON.stringify(values, null, 2));
+      console.log(values);
+      resetForm({ values: "" })
     },
     validationSchema,
   });
@@ -88,15 +101,23 @@ function App() {
 
       <form onSubmit={handleSubmit}>
         <TextField id="outlined-basic" label="Name" variant="outlined" name='name' value={values.name} onChange={handleChange} onBlur={handleBlur} />
-        {errors.name && touched.name && <div>{errors.name}</div>}
-
+        {errors.name && touched.name && <span className='error-feedback'>{errors.name}</span>}
+        <br />
         <TextField id="filled-basic" label="Uni" variant="filled" name='uni' value={values.uni} onChange={handleChange} onBlur={handleBlur} />
-        {errors.uni && touched.uni && <div>{errors.uni}</div>}
+        {errors.uni && touched.uni && <span className='error-feedback'>{errors.uni}</span>}
+        <br />
         <TextField id="standard-basic" label="Job" variant="standard" name='job' value={values.job} onChange={handleChange} onBlur={handleBlur} />
-        {errors.job && touched.job && <div>{errors.job}</div>}
+        {errors.job && touched.job && <span className='error-feedback'>{errors.job}</span>}
+        <br />
         <button type='submit'>Submit</button>
       </form>
 
+
+
+      {/* <div>{JSON.stringify(values)}</div> */}
+
+      {/* <Picker />
+      <RangePicker/> */}
     </div>
   );
 }
